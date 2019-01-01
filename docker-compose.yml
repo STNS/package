@@ -1,0 +1,14 @@
+version: '3'
+services:
+  yumrepo:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.yumrepo
+    volumes:
+      - ./repo:/opt/pkg/repo
+  debrepo:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.debrepo
+    volumes:
+      - ./repo:/opt/pkg/repo

@@ -1,6 +1,0 @@
-[submodule "stns"]
-	path = stns
-	url = git@github.com:STNS/STNS.git
-[submodule "libnss"]
-	path = libnss
-	url = git@github.com:STNS/libnss.git
