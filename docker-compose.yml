@@ -6,9 +6,33 @@ services:
       dockerfile: dockerfiles/Dockerfile.yumrepo
     volumes:
       - ./repo:/opt/pkg/repo
-  debrepo:
+  debrepo-xenial:
     build:
       context: .
       dockerfile: dockerfiles/Dockerfile.debrepo
+      args:
+        DIST: xenial
     volumes:
       - ./repo:/opt/pkg/repo
+    environment:
+      - DIST=xenial
+  debrepo-jessie:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.debrepo
+      args:
+        DIST: jessie
+    volumes:
+      - ./repo:/opt/pkg/repo
+    environment:
+      - DIST=jessie
+  debrepo-stretch:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.debrepo
+      args:
+        DIST: stretch
+    volumes:
+      - ./repo:/opt/pkg/repo
+    environment:
+      - DIST=stretch
