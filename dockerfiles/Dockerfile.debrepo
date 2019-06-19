@@ -23,11 +23,10 @@ RUN mv /tmp/releases/* releases
 RUN gpg --import keys/pub.key;gpg --import --allow-secret-key-import keys/secret.key
 RUN mkdir -p releases/$DIST && \
 cp -pr builds/stns-v2*64*.deb releases/$DIST && \
-cp -pr builds/libnss*64*$DIST*.deb releases/$DIST
-
+if [ "$DIST" = "debian" ];then cp -pr builds/libnss*64*xenial*.deb releases/$DIST;else cp -pr builds/libnss*64*$DIST*.deb releases/$DIST;fi
 
 CMD cp -pr assets/conf releases/$DIST && \
-sed -i "s/main/$DIST/" releases/$DIST/conf/distributions && \
+if [ "$DIST" != "debian" ];then sed -i "s/main/$DIST/" releases/$DIST/conf/distributions; fi && \
 cd releases/$DIST && \
 reprepro includedeb stns *.deb && \
 cd ../.. && \
