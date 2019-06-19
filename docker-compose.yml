@@ -36,3 +36,13 @@ services:
       - ./repo:/opt/pkg/repo
     environment:
       - DIST=stretch
+  debrepo-debian:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.debrepo
+      args:
+        DIST: debian
+    volumes:
+      - ./repo:/opt/pkg/repo
+    environment:
+      - DIST=debian
