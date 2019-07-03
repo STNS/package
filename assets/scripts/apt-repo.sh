@@ -7,8 +7,8 @@ sudo -k
 echo "This script requires superuser authority to configure stns apt repository:"
 
 echo "install lsb-release package"
-apt update -qqy
-apt install -y lsb-release
+sudo apt update -qqy
+sudo apt install -y lsb-release
 sudo sh <<'SCRIPT'
   set -x
   DIST=`lsb_release -a | tail -1 | awk '{ print $2 }'`
