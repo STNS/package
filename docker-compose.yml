@@ -16,6 +16,16 @@ services:
       - ./repo:/opt/pkg/repo
     environment:
       - DIST=xenial
+  debrepo-trusty:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.debrepo
+      args:
+        DIST: trusty
+    volumes:
+      - ./repo:/opt/pkg/repo
+    environment:
+      - DIST=trusty
   debrepo-jessie:
     build:
       context: .
