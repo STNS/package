@@ -6,6 +6,16 @@ services:
       dockerfile: dockerfiles/Dockerfile.yumrepo
     volumes:
       - ./repo:/opt/pkg/repo
+  debrepo-bionic:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.debrepo
+      args:
+        DIST: bionic
+    volumes:
+      - ./repo:/opt/pkg/repo
+    environment:
+      - DIST=bionic
   debrepo-xenial:
     build:
       context: .

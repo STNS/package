@@ -3,6 +3,7 @@ RELEASE_DIR=/var/www/html
 SCP=dark-hitoyoshi-1876@ssh-1.mc.lolipop.jp
 SSH=-p 33641 dark-hitoyoshi-1876@ssh-1.mc.lolipop.jp
 PRODUCT_CODES=centos jessie stretch xenial debian trusty
+PRODUCT_CODES=centos jessie stretch xenial bionic debian trusty
 build_dir:
 	rm -rf builds && mkdir builds
 
