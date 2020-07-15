@@ -6,15 +6,19 @@ PRODUCT_CODES=centos jessie stretch xenial bionic debian
 build_dir:
 	rm -rf builds && mkdir builds
 
-pkg: build_dir server_pkg client_pkg
+pkg: build_dir
 	cp ../libnss/builds/* builds
 	cp ../STNS/builds/* builds
+	cp ../cache-stnsd/builds/* builds
 
 server_pkg:
 	cd ../STNS && make pkg && (make github_release || true)
 
 client_pkg:
 	cd ../libnss && make pkg && (make github_release || true)
+
+cached_pkg:
+	cd ../cache-stnsd && make pkg && (make github_release || true)
 
 yumrepo: ## Create some distribution packages
 	rm -rf repo/centos
