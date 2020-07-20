@@ -33,10 +33,9 @@ debrepo: ## Create some distribution packages
 		docker-compose run debrepo-$$i; \
 	done
 
-repo_release: yumrepo debrepo
+repo_release: pkg yumrepo debrepo
 	for i in $(PRODUCT_CODES); do\
-		ssh $(SSH) rm -rf $(RELEASE_DIR)/$$i; \
-		scp -P 33641 -r repo/$$i $(SCP):$(RELEASE_DIR); \
+		rsync --delete -avz repo/$$i -e 'ssh -p33641' $(SCP):$(RELEASE_DIR); \
 	done
 	ssh $(SSH) mkdir -p $(RELEASE_DIR)/scripts
 	ssh $(SSH) mkdir -p $(RELEASE_DIR)/gpg
