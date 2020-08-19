@@ -26,6 +26,16 @@ services:
       - ./repo:/opt/pkg/repo
     environment:
       - DIST=xenial
+  debrepo-focul:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.debrepo
+      args:
+        DIST: focul
+    volumes:
+      - ./repo:/opt/pkg/repo
+    environment:
+      - DIST=focul
   debrepo-jessie:
     build:
       context: .
