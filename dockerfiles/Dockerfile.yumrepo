@@ -1,23 +1,12 @@
-FROM centos:6
+FROM centos:7
 RUN yum -y install epel-release
 RUN yum install -y --enablerepo=epel createrepo rpm-sign gitsudo
-
-WORKDIR /tmp
-RUN mkdir -p releases/centos/x86_64/{6,7,8} releases/centos/i386
-
-# old version
-RUN curl https://github.com/STNS/STNS/releases/download/v0.4/stns-0.4-0.x86_64.rpm -s -L -o releases/centos/x86_64/stns-0.4-0.x86_64.rpm
-RUN curl https://github.com/STNS/STNS/releases/download/v0.4/stns-0.4-0.i386.rpm -s -L -o releases/centos/i386/stns-0.4-0.i386.rpm
-RUN curl https://github.com/STNS/libnss_stns/releases/download/v0.4.5/libnss-stns-0.4.5-1.i386.rpm -s -L -o releases/centos/i386/libnss-stns-0.4.5-1.i386.rpm
-RUN curl https://github.com/STNS/libnss_stns/releases/download/v0.4.5/libpam-stns-0.4.5-1.i386.rpm -s -L -o releases/centos/i386/libpam-stns-0.4.5-1.i386.rpm
-RUN curl https://github.com/STNS/libnss_stns/releases/download/v0.4.5/libnss-stns-0.4.5-1.x86_64.rpm -s -L -o releases/centos/x86_64/libnss-stns-0.4.5-1.x86_64.rpm
-RUN curl https://github.com/STNS/libnss_stns/releases/download/v0.4.5/libpam-stns-0.4.5-1.x86_64.rpm -s -L -o releases/centos/x86_64/libpam-stns-0.4.5-1.x86_64.rpm
 
 
 ADD . /opt/pkg
 WORKDIR /opt/pkg
 RUN rm -rf releases && mkdir releases
-RUN mv /tmp/releases/* releases
+RUN mv old_assets/* releases
 
 RUN gpg --import keys/pub.key;gpg --import --allow-secret-key-import keys/secret.key && \
 echo '%_signature gpg' >> ~/.rpmmacros && \

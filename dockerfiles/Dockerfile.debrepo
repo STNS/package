@@ -4,25 +4,14 @@ RUN apt-get -qqy update && \
 
 WORKDIR /tmp
 ARG DIST
-RUN mkdir -p releases/$DIST
-
-# old version
-RUN curl https://github.com/STNS/STNS/releases/download/v0.4/stns_0.4.0_amd64.deb -s -L -o releases/$DIST/stns-0.4.0.amd64.deb
-RUN curl https://github.com/STNS/STNS/releases/download/v0.4/stns_0.4.0_i386.deb -s -L -o releases/$DIST/stns-0.4.0.i386.deb
-RUN curl https://github.com/STNS/libnss_stns/releases/download/v0.4.5/libnss-stns_0.4.5_amd64.deb -s -L -o releases/$DIST/libnss-stns_0.4.5_amd64.deb
-RUN curl https://github.com/STNS/libnss_stns/releases/download/v0.4.5/libpam-stns_0.4.5_amd64.deb -s -L -o releases/$DIST/libpam-stns_0.4.5_amd64.deb
-
-RUN curl https://github.com/STNS/libnss_stns/releases/download/v0.4.5/libnss-stns_0.4.5_i386.deb -s -L -o releases/$DIST/libnss-stns_0.4.5_i386.deb
-RUN curl https://github.com/STNS/libnss_stns/releases/download/v0.4.5/libpam-stns_0.4.5_i386.deb -s -L -o releases/$DIST/libpam-stns_0.4.5_i386.deb
 
 ADD . /opt/pkg
 WORKDIR /opt/pkg
 RUN rm -rf releases && mkdir releases
-RUN mv /tmp/releases/* releases
+RUN mkdir -p releases/$DIST && cp old_assets/deb/* releases/$DIST
 
 RUN gpg --import keys/pub.key;gpg --import --allow-secret-key-import keys/secret.key
-RUN mkdir -p releases/$DIST && \
-if [ "$DIST" = "debian" ];then cp -pr builds/stns-v2*64*xenial*.deb releases/$DIST;else cp -pr builds/stns-v2*64*$DIST*.deb releases/$DIST;fi && \
+RUN if [ "$DIST" = "debian" ];then cp -pr builds/stns-v2*64*xenial*.deb releases/$DIST;else cp -pr builds/stns-v2*64*$DIST*.deb releases/$DIST;fi && \
 if [ "$DIST" = "debian" ];then cp -pr builds/cache-stnsd*64*xenial*.deb releases/$DIST;else cp -pr builds/cache-stnsd*64*$DIST*.deb releases/$DIST;fi && \
 if [ "$DIST" = "debian" ];then cp -pr builds/libnss*64*xenial*.deb releases/$DIST;else cp -pr builds/libnss*64*$DIST*.deb releases/$DIST;fi
 
