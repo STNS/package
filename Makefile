@@ -49,7 +49,9 @@ debrepo: ## Create some distribution packages
 		docker-compose run debrepo-$$i; \
 	done
 
-repo_release: pkg old_assets yumrepo debrepo
+
+
+repo_release: pkg old_assets yumrepo debrepo server_pkg client_pkg cached_pkg
 	for i in $(PRODUCT_CODES); do\
 		rsync --delete -avz repo/$$i -e 'ssh -p33641' $(SCP):$(RELEASE_DIR); \
 	done
