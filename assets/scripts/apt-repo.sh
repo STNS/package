@@ -8,7 +8,7 @@ echo "This script requires superuser authority to configure stns apt repository:
 
 echo "install lsb-release package"
 sudo apt update -qqy
-sudo apt install -y lsb-release gnupg
+sudo apt install -y lsb-release gnupg ca-certificates
 sudo sh <<'SCRIPT'
   set -x
   DIST=`lsb_release -a | tail -1 | awk '{ print $2 }'`
