@@ -2,7 +2,7 @@ RELEASE_DIR=/var/www/html
 
 SCP=dark-hitoyoshi-1876@ssh-1.mc.lolipop.jp
 SSH=-p 33641 dark-hitoyoshi-1876@ssh-1.mc.lolipop.jp
-PRODUCT_CODES=centos jessie stretch buster bullseye xenial bionic focal debian
+PRODUCT_CODES=centos jessie stretch buster bullseye xenial bionic focal jammy debian
 
 old_assets:
 	mkdir -p old_assets/centos/x86_64/{6,7,8} old_assets/centos/i386
