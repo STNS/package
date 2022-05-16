@@ -36,6 +36,16 @@ services:
       - ./repo:/opt/pkg/repo
     environment:
       - DIST=focal
+  debrepo-jammy:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.debrepo
+      args:
+        DIST: jammy
+    volumes:
+      - ./repo:/opt/pkg/repo
+    environment:
+      - DIST=jammy
   debrepo-jessie:
     build:
       context: .
