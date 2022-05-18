@@ -16,16 +16,6 @@ services:
       - ./repo:/opt/pkg/repo
     environment:
       - DIST=bionic
-  debrepo-xenial:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.debrepo
-      args:
-        DIST: xenial
-    volumes:
-      - ./repo:/opt/pkg/repo
-    environment:
-      - DIST=xenial
   debrepo-focal:
     build:
       context: .
@@ -46,26 +36,6 @@ services:
       - ./repo:/opt/pkg/repo
     environment:
       - DIST=jammy
-  debrepo-jessie:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.debrepo
-      args:
-        DIST: jessie
-    volumes:
-      - ./repo:/opt/pkg/repo
-    environment:
-      - DIST=jessie
-  debrepo-stretch:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.debrepo
-      args:
-        DIST: stretch
-    volumes:
-      - ./repo:/opt/pkg/repo
-    environment:
-      - DIST=stretch
   debrepo-buster:
     build:
       context: .
