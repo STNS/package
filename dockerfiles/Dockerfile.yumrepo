@@ -23,7 +23,6 @@ RUN cp -pr releases/centos/x86_64/lib{nss,pam}-stns-*.rpm releases/centos/x86_64
 RUN cp -pr releases/centos/x86_64/lib{nss,pam}-stns-*.rpm releases/centos/x86_64/2/
 
 RUN cp -pr builds/*64*.rpm releases/centos/x86_64/
-RUN cp -pr builds/*64*.el6.rpm releases/centos/x86_64/6/
 RUN cp -pr builds/*64*.el7.rpm releases/centos/x86_64/7/
 RUN cp -pr builds/*64*.el8.rpm releases/centos/x86_64/8/
 RUN cp -pr builds/*64*.el7.rpm releases/centos/x86_64/2/
