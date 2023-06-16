@@ -6,37 +6,26 @@ RUN yum install -y --enablerepo=epel createrepo rpm-sign gitsudo
 ADD . /opt/pkg
 WORKDIR /opt/pkg
 RUN rm -rf releases && mkdir releases
-RUN mv old_assets/* releases
-RUN mkdir -p releases/centos/x86_64/{6,7,8,2}
+RUN mkdir -p releases/centos/x86_64/{7,2}
+RUN mkdir -p releases/almalinux/x86_64/9
 
 RUN gpg --import keys/pub.key;gpg --import --allow-secret-key-import keys/secret.key && \
 echo '%_signature gpg' >> ~/.rpmmacros && \
-echo '%_gpg_name stns-server' >> ~/.rpmmacros
-
-RUN cp -pr releases/centos/x86_64/stns-0*.rpm releases/centos/x86_64/6/
-RUN cp -pr releases/centos/x86_64/stns-0*.rpm releases/centos/x86_64/7/
-RUN cp -pr releases/centos/x86_64/stns-0*.rpm releases/centos/x86_64/8/
-RUN cp -pr releases/centos/x86_64/stns-0*.rpm releases/centos/x86_64/2/
-RUN cp -pr releases/centos/x86_64/lib{nss,pam}-stns-*.rpm releases/centos/x86_64/6/
-RUN cp -pr releases/centos/x86_64/lib{nss,pam}-stns-*.rpm releases/centos/x86_64/7/
-RUN cp -pr releases/centos/x86_64/lib{nss,pam}-stns-*.rpm releases/centos/x86_64/8/
-RUN cp -pr releases/centos/x86_64/lib{nss,pam}-stns-*.rpm releases/centos/x86_64/2/
+echo '%_gpg_name stns-server' >> ~/.rpmmacros && \
+echo '%_gpg_digest_algo sha256' >> ~/.rpmmacros &&\
+echo '%_gpg_hash_algo 8' >> ~/.rpmmacros
 
 RUN cp -pr builds/*64*.rpm releases/centos/x86_64/
+RUN cp -pr builds/*64*.el9.rpm releases/almalinux/x86_64/9/
 RUN cp -pr builds/*64*.el7.rpm releases/centos/x86_64/7/
-RUN cp -pr builds/*64*.el8.rpm releases/centos/x86_64/8/
 RUN cp -pr builds/*64*.el7.rpm releases/centos/x86_64/2/
 
 CMD rpm --addsign releases/centos/x86_64/*.rpm && \
-rpm --addsign releases/centos/x86_64/6/*.rpm && \
+rpm --addsign releases/almalinux/x86_64/9/*.rpm && \
 rpm --addsign releases/centos/x86_64/7/*.rpm && \
-rpm --addsign releases/centos/x86_64/8/*.rpm && \
 rpm --addsign releases/centos/x86_64/2/*.rpm && \
-rpm --addsign releases/centos/i386/*.rpm && \
 createrepo --checksum sha releases/centos/x86_64/ && \
-createrepo --checksum sha releases/centos/x86_64/6 && \
+createrepo --checksum sha releases/almalinux/x86_64/9 && \
 createrepo --checksum sha releases/centos/x86_64/7 && \
-createrepo --checksum sha releases/centos/x86_64/8 && \
 createrepo --checksum sha releases/centos/x86_64/2 && \
-createrepo --checksum sha releases/centos/i386/ && \
 cp -r releases/* repo/
