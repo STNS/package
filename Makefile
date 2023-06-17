@@ -43,7 +43,7 @@ production_deploy: deploy
 staging_deploy: ENVIRONMENT=staging
 staging_deploy: deploy
 
-deploy: pkg yumrepo debrepo #server_pkg client_pkg cached_pkg
+deploy: #pkg yumrepo debrepo #server_pkg client_pkg cached_pkg
 	for i in $(PRODUCT_CODES); do\
 		rsync --delete -avz repo/$$i -e 'ssh' $(SSH):$(RELEASE_DIR); \
 	done
