@@ -1,0 +1,23 @@
+#!/bin/bash
+
+# Usage: ./download_latest_release.sh owner repo
+# Example: ./download_latest_release.sh octocat Hello-World
+
+OWNER="$1"
+REPO="$2"
+
+if [ -z "$OWNER" ] || [ -z "$REPO" ]; then
+  echo "Usage: $0 owner repo"
+  exit 1
+fi
+mkdir -p builds
+cd builds
+
+API_URL="https://api.github.com/repos/$OWNER/$REPO/releases/latest"
+ASSET_DOWNLOAD_URLS=$(curl -s "$API_URL" | jq -r '.assets[].browser_download_url' |grep -v tar.gz)
+for URL in $ASSET_DOWNLOAD_URLS; do
+  echo "Downloading $URL..."
+  test -e $(basename "$URL") || curl -s -O -L -J $URL
+done
+
+echo "All assets have been downloaded."

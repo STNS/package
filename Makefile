@@ -7,22 +7,11 @@ STAGING_SSH=lingering-dew-9357@ssh.mc.lolipop.jp
 SSH = $(if $(filter staging,$(ENVIRONMENT)),$(STAGING_SSH),$(PRODUCTION_SSH))
 PRODUCT_CODES=centos almalinux buster bullseye focal jammy debian
 
-build_dir:
-	mkdir -p builds
-	rm -rf builds/*
-pkg: build_dir
-	cp ../libnss/builds/* builds
-	cp ../STNS/builds/* builds
-	cp ../cache-stnsd/builds/* builds
-
-server_pkg:
-	cd ../STNS && make pkg && (make github_release || true)
-
-client_pkg:
-	cd ../libnss && make pkg && (make github_release || true)
-
-cached_pkg:
-	cd ../cache-stnsd && make pkg && (make github_release || true)
+pkg:
+	rm -rf builds
+	bin/download_artifacts STNS STNS
+	bin/download_artifacts STNS libnss
+	bin/download_artifacts STNS cache-stnsd
 
 yumrepo: ## Create some distribution packages
 	sudo rm -rf repo/centos
@@ -43,7 +32,7 @@ production_deploy: deploy
 staging_deploy: ENVIRONMENT=staging
 staging_deploy: deploy
 
-deploy: #pkg yumrepo debrepo #server_pkg client_pkg cached_pkg
+deploy: pkg
 	for i in $(PRODUCT_CODES); do\
 		rsync --delete -avz repo/$$i -e 'ssh' $(SSH):$(RELEASE_DIR); \
 	done
