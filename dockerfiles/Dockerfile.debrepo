@@ -5,11 +5,11 @@ RUN apt-get -qqy update && \
 WORKDIR /tmp
 ARG DIST
 
-ADD . /opt/pkg
+COPY . /opt/pkg
 WORKDIR /opt/pkg
 RUN rm -rf releases && mkdir releases
 RUN mkdir -p releases/$DIST
-RUN gpg --import keys/pub.key;gpg --import --allow-secret-key-import keys/secret.key
+RUN gpg --import keys/pub.key;gpg --import --batch --allow-secret-key-import keys/sec.key
 RUN if [ "$DIST" = "debian" ];then cp -pr builds/stns-v2*64*jammy*.deb releases/$DIST;else cp -pr builds/stns-v2*64*$DIST*.deb releases/$DIST;fi && \
 if [ "$DIST" = "debian" ];then cp -pr builds/cache-stnsd*64*jammy*.deb releases/$DIST;else cp -pr builds/cache-stnsd*64*$DIST*.deb releases/$DIST;fi && \
 if [ "$DIST" = "debian" ];then cp -pr builds/libnss*64*jammy*.deb releases/$DIST;else cp -pr builds/libnss*64*$DIST*.deb releases/$DIST;fi

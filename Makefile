@@ -1,7 +1,11 @@
 RELEASE_DIR=/var/www/html
-SCP=dark-hitoyoshi-1876@ssh-1.mc.lolipop.jp
-SSH=-p 33641 dark-hitoyoshi-1876@ssh-1.mc.lolipop.jp
-PRODUCT_CODES=centos buster bullseye focal jammy debian
+
+ENVIRONMENT ?= staging
+PRODUCTION_SSH=rough-field-2764@ssh.mc.lolipop.jp
+STAGING_SSH=lingering-dew-9357@ssh.mc.lolipop.jp
+
+SSH = $(if $(filter staging,$(ENVIRONMENT)),$(STAGING_SSH),$(PRODUCTION_SSH))
+PRODUCT_CODES=centos almalinux buster bullseye focal jammy debian
 
 build_dir:
 	mkdir -p builds
@@ -28,17 +32,23 @@ yumrepo: ## Create some distribution packages
 debrepo: ## Create some distribution packages
 	for i in $(PRODUCT_CODES); do\
 	  	if [ "$$i" = "centos" ];then continue; fi; \
+	  	if [ "$$i" = "almalinux" ];then continue; fi; \
 		rm -rf repo/$$i; \
 		docker-compose build debrepo-$$i; \
 		docker-compose run debrepo-$$i; \
 	done
 
-repo_release: pkg yumrepo debrepo #server_pkg client_pkg cached_pkg
+production_deploy: ENVIRONMENT=production
+production_deploy: deploy
+staging_deploy: ENVIRONMENT=staging
+staging_deploy: deploy
+
+deploy: pkg yumrepo debrepo #server_pkg client_pkg cached_pkg
 	for i in $(PRODUCT_CODES); do\
-		rsync --delete -avz repo/$$i -e 'ssh -p33641' $(SCP):$(RELEASE_DIR); \
+		rsync --delete -avz repo/$$i -e 'ssh' $(SSH):$(RELEASE_DIR); \
 	done
 	ssh $(SSH) mkdir -p $(RELEASE_DIR)/scripts
 	ssh $(SSH) mkdir -p $(RELEASE_DIR)/gpg
-	scp -P 33641 assets/GPG-KEY-stns $(SCP):$(RELEASE_DIR)/gpg/
-	scp -P 33641 assets/scripts/yum-repo.sh $(SCP):$(RELEASE_DIR)/scripts/
-	scp -P 33641 assets/scripts/apt-repo.sh $(SCP):$(RELEASE_DIR)/scripts/
+	scp assets/GPG-KEY-stns $(SSH):$(RELEASE_DIR)/gpg/
+	scp assets/scripts/yum-repo.sh $(SSH):$(RELEASE_DIR)/scripts/
+	scp assets/scripts/apt-repo.sh $(SSH):$(RELEASE_DIR)/scripts/

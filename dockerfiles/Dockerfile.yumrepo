@@ -3,13 +3,13 @@ RUN yum -y install epel-release
 RUN yum install -y --enablerepo=epel createrepo rpm-sign gitsudo
 
 
-ADD . /opt/pkg
+COPY . /opt/pkg
 WORKDIR /opt/pkg
 RUN rm -rf releases && mkdir releases
 RUN mkdir -p releases/centos/x86_64/{7,2}
 RUN mkdir -p releases/almalinux/x86_64/9
 
-RUN gpg --import keys/pub.key;gpg --import --allow-secret-key-import keys/secret.key && \
+RUN gpg --import keys/pub.key;gpg --import --batch --allow-secret-key-import keys/sec.key && \
 echo '%_signature gpg' >> ~/.rpmmacros && \
 echo '%_gpg_name stns-server' >> ~/.rpmmacros && \
 echo '%_gpg_digest_algo sha256' >> ~/.rpmmacros &&\
