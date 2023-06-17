@@ -20,7 +20,7 @@ sudo sh <<'SCRIPT'
     os_name="almalinux"
     releasever=$(rpm -q --qf "%{version}" -f /etc/almalinux-release| cut -d. -f1)
   elif [ -f /etc/rocky-release ]; then
-    os_name="rocky"
+    os_name="almalinux"
     releasever=$(rpm -q --qf "%{version}" -f /etc/rocky-release| cut -d. -f1)
   else
     echo "Unsupported OS. Please use CentOS or AlmaLinux."
