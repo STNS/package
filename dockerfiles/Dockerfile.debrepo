@@ -5,16 +5,16 @@ RUN apt-get -qqy update && \
 WORKDIR /tmp
 ARG DIST
 
-ADD . /opt/pkg
+COPY . /opt/pkg
 WORKDIR /opt/pkg
 RUN rm -rf releases && mkdir releases
-RUN mkdir -p releases/$DIST && cp old_assets/deb/* releases/$DIST
+RUN mkdir -p releases/$DIST
+RUN gpg --import keys/pub.key;gpg --import --batch --allow-secret-key-import keys/sec.key
+RUN if [ "$DIST" = "debian" ];then cp -pr builds/stns-v2*64*jammy*.deb releases/$DIST;else cp -pr builds/stns-v2*64*$DIST*.deb releases/$DIST;fi && \
+if [ "$DIST" = "debian" ];then cp -pr builds/cache-stnsd*64*jammy*.deb releases/$DIST;else cp -pr builds/cache-stnsd*64*$DIST*.deb releases/$DIST;fi && \
+if [ "$DIST" = "debian" ];then cp -pr builds/libnss*64*jammy*.deb releases/$DIST;else cp -pr builds/libnss*64*$DIST*.deb releases/$DIST;fi
 
-RUN gpg --import keys/pub.key;gpg --import --allow-secret-key-import keys/secret.key
-RUN if [ "$DIST" = "debian" ];then cp -pr builds/stns-v2*64*xenial*.deb releases/$DIST;else cp -pr builds/stns-v2*64*$DIST*.deb releases/$DIST;fi && \
-if [ "$DIST" = "debian" ];then cp -pr builds/cache-stnsd*64*xenial*.deb releases/$DIST;else cp -pr builds/cache-stnsd*64*$DIST*.deb releases/$DIST;fi && \
-if [ "$DIST" = "debian" ];then cp -pr builds/libnss*64*xenial*.deb releases/$DIST;else cp -pr builds/libnss*64*$DIST*.deb releases/$DIST;fi
-
+RUN echo 'digest-algo sha256' >> /root/.gnupg/gpg.conf
 CMD cp -pr assets/conf releases/$DIST && \
 if [ "$DIST" != "debian" ];then sed -i "s/main/$DIST/" releases/$DIST/conf/distributions; fi && \
 cd releases/$DIST && \
