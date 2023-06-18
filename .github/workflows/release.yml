@@ -16,9 +16,16 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     - name: Install SSH key
-      uses: shimataro/ssh-key-action@v1
+      uses: shimataro/ssh-key-action@v2
       with:
-        private-key: ${{ secrets.SSH_PRIVATE_KEY }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        known_hosts: unnecessary
+        name: id_ed25519
+        config: |
+          Host ssh.mc.lolipop.jp
+            UserKnownHostsFile /dev/null
+            StrictHostKeyChecking no
+            IdentityFile ~/.ssh/id_ed25519
     - name: dump keys
       run: |
         mkdir -p keys
