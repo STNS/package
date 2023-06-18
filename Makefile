@@ -8,7 +8,6 @@ SSH = $(if $(filter staging,$(ENVIRONMENT)),$(STAGING_SSH),$(PRODUCTION_SSH))
 PRODUCT_CODES=centos almalinux buster bullseye focal jammy debian
 
 pkg:
-	rm -rf builds
 	bin/download_artifacts STNS STNS
 	bin/download_artifacts STNS libnss
 	bin/download_artifacts STNS cache-stnsd
@@ -16,15 +15,15 @@ pkg:
 yumrepo: ## Create some distribution packages
 	sudo rm -rf repo/centos
 	docker-compose build yumrepo
-	docker-compose run yumrepo
+	docker-compose run -e GPG_PASSWORD=$(GPG_PASSWORD) yumrepo
 
 debrepo: ## Create some distribution packages
 	for i in $(PRODUCT_CODES); do\
 	  	if [ "$$i" = "centos" ];then continue; fi; \
 	  	if [ "$$i" = "almalinux" ];then continue; fi; \
-		rm -rf repo/$$i; \
+		sudo rm -rf repo/$$i; \
 		docker-compose build debrepo-$$i; \
-		docker-compose run debrepo-$$i; \
+		docker-compose run -e GPG_PASSWORD=$(GPG_PASSWORD) debrepo-$$i; \
 	done
 
 production_deploy: ENVIRONMENT=production
@@ -32,7 +31,7 @@ production_deploy: deploy
 staging_deploy: ENVIRONMENT=staging
 staging_deploy: deploy
 
-deploy: pkg
+deploy: pkg yumrepo debrepo
 	for i in $(PRODUCT_CODES); do\
 		rsync --delete -avz repo/$$i -e 'ssh' $(SSH):$(RELEASE_DIR); \
 	done

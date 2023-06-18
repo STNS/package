@@ -1,0 +1,12 @@
+#!/bin/bash
+set -e
+
+gpg-connect-agent /bye || eval $(gpg-agent --daemon)
+grep allow-preset-passphrase ~/.gnupg/gpg-agent.conf || echo allow-preset-passphrase >> ~/.gnupg/gpg-agent.conf
+gpg-connect-agent reloadagent /bye
+
+gpg --import keys/pub.key
+gpg --import --batch --allow-secret-key-import --passphrase=$GPG_PASSWORD keys/sec.key
+keygrip=`gpg --list-secret-keys --with-colons 'ED9008B740C6735CB3EF098C37DE344F75E258B6' | awk -F : '$1 == "grp" { print $10 }'`
+export PATH=/usr/libexec:/usr/lib/gnupg2:$PATH
+echo $GPG_PASSWORD | gpg-preset-passphrase --preset "$keygrip"

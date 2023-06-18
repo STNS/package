@@ -1,16 +1,12 @@
-FROM centos:7
-RUN yum -y install epel-release
-RUN yum install -y --enablerepo=epel createrepo rpm-sign gitsudo
-
-
+FROM almalinux:9
+RUN dnf install -y createrepo rpm-sign git sudo pinentry
 COPY . /opt/pkg
 WORKDIR /opt/pkg
 RUN rm -rf releases && mkdir releases
 RUN mkdir -p releases/centos/x86_64/{7,2}
 RUN mkdir -p releases/almalinux/x86_64/9
 
-RUN gpg --import keys/pub.key;gpg --import --batch --allow-secret-key-import keys/sec.key && \
-echo '%_signature gpg' >> ~/.rpmmacros && \
+RUN echo '%_signature gpg' >> ~/.rpmmacros && \
 echo '%_gpg_name stns-server' >> ~/.rpmmacros && \
 echo '%_gpg_digest_algo sha256' >> ~/.rpmmacros &&\
 echo '%_gpg_hash_algo 8' >> ~/.rpmmacros
@@ -20,12 +16,14 @@ RUN cp -pr builds/*64*.el9.rpm releases/almalinux/x86_64/9/
 RUN cp -pr builds/*64*.el7.rpm releases/centos/x86_64/7/
 RUN cp -pr builds/*64*.el7.rpm releases/centos/x86_64/2/
 
-CMD rpm --addsign releases/centos/x86_64/*.rpm && \
+ENV GPG_PASSWORD dummy
+CMD bin/import_gpgkey && \
+rpm --addsign releases/centos/x86_64/*.rpm && \
 rpm --addsign releases/almalinux/x86_64/9/*.rpm && \
 rpm --addsign releases/centos/x86_64/7/*.rpm && \
 rpm --addsign releases/centos/x86_64/2/*.rpm && \
-createrepo --checksum sha releases/centos/x86_64/ && \
-createrepo --checksum sha releases/almalinux/x86_64/9 && \
-createrepo --checksum sha releases/centos/x86_64/7 && \
-createrepo --checksum sha releases/centos/x86_64/2 && \
+createrepo --checksum sha256 releases/centos/x86_64/ && \
+createrepo --checksum sha256 releases/almalinux/x86_64/9 && \
+createrepo --checksum sha256 releases/centos/x86_64/7 && \
+createrepo --checksum sha256 releases/centos/x86_64/2 && \
 cp -r releases/* repo/
