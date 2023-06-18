@@ -1,0 +1,32 @@
+---
+name: release
+on:
+  workflow_dispatch:
+    inputs:
+      stage:
+        description: 'deploy stage'
+        default: "staging"
+        required: true
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      SSH_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
+    steps:
+    - uses: actions/checkout@v3
+    - name: Install SSH key
+      uses: shimataro/ssh-key-action@v1
+      with:
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+    - name: dump keys
+      run: |
+        mkdir -p keys
+        echo ${{ secrets.GPG_PUBLIC_KEY }} > keys/pub.key
+        echo ${{ secrets.GPG_PRIVATE_KEY }} > keys/sec.key
+        bin/import_gpgkey &>/dev/null
+      env:
+        GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
+    - name: deploy
+      run: make ${{ github.event.inputs.stage }}_deploy
