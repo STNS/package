@@ -1,5 +1,6 @@
 #!/bin/bash
 set -e
+mkdir -p ~/.gnupg/
 
 gpg-connect-agent /bye || eval $(gpg-agent --daemon)
 grep allow-preset-passphrase ~/.gnupg/gpg-agent.conf || echo allow-preset-passphrase >> ~/.gnupg/gpg-agent.conf
