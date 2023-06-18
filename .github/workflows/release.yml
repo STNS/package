@@ -26,8 +26,8 @@ jobs:
     - name: dump keys
       run: |
         mkdir -p keys
-        echo ${{ secrets.GPG_PUBLIC_KEY }} > keys/pub.key
-        echo ${{ secrets.GPG_SECRET_KEY }} > keys/sec.key
+        echo -n '${{ secrets.GPG_PUBLIC_KEY }}' > keys/pub.key
+        echo -n '${{ secrets.GPG_SECRET_KEY }}' > keys/sec.key
         ls -ltr bin/import_gpgkey
         which gpg-connect-agent
         bin/import_gpgkey &>/dev/null
