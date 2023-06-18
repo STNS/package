@@ -20,6 +20,9 @@ jobs:
       with:
         key: ${{ secrets.SSH_PRIVATE_KEY }}
         known_hosts: ${{ secrets.KNOWN_HOSTS }}
+    - run: |
+        apt-get -qqy update && \
+        apt-get install -yq gnupg2 gpg-agent pinentry-curses
     - name: dump keys
       run: |
         mkdir -p keys
