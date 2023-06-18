@@ -15,11 +15,9 @@ jobs:
       SSH_KEY: "${{ secrets.SSH_PRIVATE_KEY }}"
     steps:
     - uses: actions/checkout@v3
-    - name: Install SSH key
-      uses: shimataro/ssh-key-action@v2
+    - uses: webfactory/ssh-agent@v0.7.0
       with:
-        key: ${{ secrets.SSH_PRIVATE_KEY }}
-        known_hosts: ${{ secrets.KNOWN_HOSTS }}
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }}
     - name: dump keys
       run: |
         mkdir -p keys
