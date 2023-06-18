@@ -25,8 +25,7 @@ jobs:
         mkdir -p keys
         echo -n '${{ secrets.GPG_PUBLIC_KEY }}' > keys/pub.key
         echo -n '${{ secrets.GPG_SECRET_KEY }}' > keys/sec.key
-        bin/import_gpgkey &>/dev/null
-      env:
-        GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
     - name: deploy
       run: make ${{ github.event.inputs.stage }}_deploy
+      env:
+        GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}

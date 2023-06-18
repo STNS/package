@@ -17,7 +17,7 @@ RUN cp -pr builds/*64*.el7.rpm releases/centos/x86_64/7/
 RUN cp -pr builds/*64*.el7.rpm releases/centos/x86_64/2/
 
 ENV GPG_PASSWORD dummy
-CMD bin/import_gpgkey && \
+CMD bin/import_gpgkey &>/dev/null && \
 rpm --addsign releases/centos/x86_64/*.rpm && \
 rpm --addsign releases/almalinux/x86_64/9/*.rpm && \
 rpm --addsign releases/centos/x86_64/7/*.rpm && \

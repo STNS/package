@@ -16,7 +16,7 @@ if [ "$DIST" = "debian" ];then cp -pr builds/libnss*64*jammy*.deb releases/$DIST
 RUN mkdir -p /root/.gnupg && echo 'digest-algo sha256' >> /root/.gnupg/gpg.conf
 
 ENV GPG_PASSWORD dummy
-CMD bin/import_gpgkey && \
+CMD bin/import_gpgkey  &>/dev/null && \
 cp -pr assets/conf releases/$DIST && \
 if [ "$DIST" != "debian" ];then sed -i "s/main/$DIST/" releases/$DIST/conf/distributions; fi && \
 cd releases/$DIST && \
