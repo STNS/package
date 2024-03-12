@@ -1,29 +1,50 @@
 FROM almalinux:9
+
+# Install necessary packages
 RUN dnf install -y createrepo rpm-sign git sudo pinentry
+
+# Copy package files
 COPY . /opt/pkg
 WORKDIR /opt/pkg
-RUN rm -rf releases && mkdir releases
-RUN mkdir -p releases/centos/x86_64/{7,2}
-RUN mkdir -p releases/almalinux/x86_64/9
 
+# Setup GPG for RPM signing
 RUN echo '%_signature gpg' >> ~/.rpmmacros && \
-echo '%_gpg_name stns-server' >> ~/.rpmmacros && \
-echo '%_gpg_digest_algo sha256' >> ~/.rpmmacros &&\
-echo '%_gpg_hash_algo 8' >> ~/.rpmmacros
+    echo '%_gpg_name stns-server' >> ~/.rpmmacros && \
+    echo '%_gpg_digest_algo sha256' >> ~/.rpmmacros &&\
+    echo '%_gpg_hash_algo 8' >> ~/.rpmmacros
 
-RUN cp -pr builds/*64*.rpm releases/centos/x86_64/
-RUN cp -pr builds/*64*.el9.rpm releases/almalinux/x86_64/9/
-RUN cp -pr builds/*64*.el7.rpm releases/centos/x86_64/7/
-RUN cp -pr builds/*64*.el7.rpm releases/centos/x86_64/2/
+# Prepare directory structure
+RUN mkdir -p releases/{centos,almalinux}/{x86_64,aarch64}/{9,7,2} && \
+    rm -rf releases/*/*/*
 
+# Copy builds to their respective directories
+# We unify the copy commands for amd64/x86_64 and arm64/aarch64 packages,
+# assuming builds directory contains properly named packages for each architecture and distro version
+RUN for arch in amd64 x86_64 arm64 aarch64; do \
+        for dist in centos almalinux; do \
+            if [ "$dist" = "almalinux" ]; then \
+                cp -pr builds/*${arch}*.el9.rpm releases/${dist}/${arch%md64}/9/; \
+            else \
+                cp -pr builds/*${arch}*.el7.rpm releases/${dist}/${arch%md64}/7/; \
+                cp -pr builds/*${arch}*.el7.rpm releases/${dist}/${arch%md64}/2/; \
+                cp -pr builds/*${arch}*.rpm releases/${dist}/${arch%md64}/; \
+            fi \
+        done \
+    done
+
+# Set dummy GPG password
 ENV GPG_PASSWORD dummy
+
+# Sign packages and create repositories
 CMD bin/import_gpgkey &>/dev/null && \
-rpm --addsign releases/centos/x86_64/*.rpm && \
-rpm --addsign releases/almalinux/x86_64/9/*.rpm && \
-rpm --addsign releases/centos/x86_64/7/*.rpm && \
-rpm --addsign releases/centos/x86_64/2/*.rpm && \
-createrepo --checksum sha256 releases/centos/x86_64/ && \
-createrepo --checksum sha256 releases/almalinux/x86_64/9 && \
-createrepo --checksum sha256 releases/centos/x86_64/7 && \
-createrepo --checksum sha256 releases/centos/x86_64/2 && \
-cp -r releases/* repo/
+    for arch in x86_64 aarch64; do \
+        for dist in centos almalinux; do \
+            for ver in 9 7 2; do \
+                if [ -d releases/${dist}/${arch}/${ver} ]; then \
+                    rpm --addsign releases/${dist}/${arch}/${ver}/*.rpm && \
+                    createrepo --checksum sha256 releases/${dist}/${arch}/${ver}; \
+                fi \
+            done \
+        done \
+    done && \
+    cp -r releases/* repo/
