@@ -14,8 +14,7 @@ RUN echo '%_signature gpg' >> ~/.rpmmacros && \
     echo '%_gpg_hash_algo 8' >> ~/.rpmmacros
 
 # Prepare directory structure
-RUN mkdir -p releases/{centos,almalinux}/{x86_64,aarch64}/{9,7,2} && \
-    rm -rf releases/*/*/*
+RUN mkdir -p releases/{centos,almalinux}/{x86_64,aarch64}/{9,7,2}
 
 # Copy builds to their respective directories
 # We unify the copy commands for amd64/x86_64 and arm64/aarch64 packages,
