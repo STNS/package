@@ -1,4 +1,4 @@
-FROM ubuntu:focal
+FROM ubuntu:jammy
 RUN apt-get -qqy update && \
     apt-get install -yq reprepro curl gnupg2
 
@@ -9,8 +9,8 @@ COPY . /opt/pkg
 WORKDIR /opt/pkg
 RUN rm -rf releases && mkdir releases
 RUN mkdir -p releases/$DIST
-RUN cp -pr builds/stns-v2*.deb releases/$DIST && \
-if  cp -pr builds/cache-stnsd*.deb releases/$DIST && \
+RUN cp -pr builds/stns-v2*64*.deb releases/$DIST && \
+    cp -pr builds/cache-stnsd*64*.deb releases/$DIST && \
 if [ "$DIST" = "debian" ];then cp -pr builds/libnss*64*jammy*.deb releases/$DIST;else cp -pr builds/libnss*64*$DIST*.deb releases/$DIST;fi
 
 RUN mkdir -p /root/.gnupg && echo 'digest-algo sha256' >> /root/.gnupg/gpg.conf
