@@ -1,0 +1,26 @@
+---
+name: test
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    env:
+      GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: dump keys
+      run: |
+        mkdir -p keys
+        echo -n '${{ secrets.GPG_PUBLIC_KEY }}' > keys/pub.key
+        echo -n '${{ secrets.GPG_SECRET_KEY }}' > keys/sec.key
+    - name: pkg
+      run: make pkg
+    - name: yum
+      run: make yumrepo
+    - name: deb
+      run: make debrepo

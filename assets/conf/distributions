@@ -1,7 +1,7 @@
 Origin: stns
 Label: stns
 Codename: stns
-Architectures: amd64
+Architectures: amd64 arm64
 Components: main
 Description: Apt repository for project stns
 SignWith: ED9008B740C6735CB3EF098C37DE344F75E258B6
