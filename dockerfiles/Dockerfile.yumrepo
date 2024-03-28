@@ -25,10 +25,17 @@ RUN cp -pr builds/*aarch64*el7.rpm releases/centos/aarch64/7/
 RUN cp -pr builds/*aarch64*el7.rpm releases/centos/aarch64/2/
 
 # for go packages(cache-stnsd,stns)
-RUN cp -pr builds/*{amd64,arm64}*.rpm releases/centos/x86_64/
-RUN cp -pr builds/*{amd64,arm64}*.rpm releases/almalinux/x86_64/9
-RUN cp -pr builds/*{amd64,arm64}*.rpm releases/centos/x86_64/7
-RUN cp -pr builds/*{amd64,arm64}*.rpm releases/centos/x86_64/2
+RUN cp -pr builds/*amd64*.rpm releases/centos/x86_64/
+RUN cp -pr builds/*amd64*.rpm releases/almalinux/x86_64/9
+RUN cp -pr builds/*amd64*.rpm releases/centos/x86_64/7
+RUN cp -pr builds/*amd64*.rpm releases/centos/x86_64/2
+
+RUN cp -pr builds/*arm64*.rpm releases/centos/aarch64/
+RUN cp -pr builds/*arm64*.rpm releases/almalinux/aarch64/9
+RUN cp -pr builds/*arm64*.rpm releases/centos/aarch64/7
+RUN cp -pr builds/*arm64*.rpm releases/centos/aarch64/2
+RUN for f in releases/*/aarch64/*/*arm64*.rpm; do mv "$f" "${f/arm64/aarch64}"; done
+RUN for f in releases/*/aarch64/*arm64*.rpm; do mv "$f" "${f/arm64/aarch64}"; done
 
 ENV GPG_PASSWORD dummy
 CMD bin/import_gpgkey &>/dev/null && \
