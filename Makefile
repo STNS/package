@@ -40,3 +40,9 @@ deploy: pkg yumrepo debrepo
 	scp assets/GPG-KEY-stns $(SSH):$(RELEASE_DIR)/gpg/
 	scp assets/scripts/yum-repo.sh $(SSH):$(RELEASE_DIR)/scripts/
 	scp assets/scripts/apt-repo.sh $(SSH):$(RELEASE_DIR)/scripts/
+
+run_docker:
+	docker build -t stns-build .
+	docker rm -f stns-build || true
+	docker run --name stns-build -d --privileged -t stns-build /sbin/init
+	docker exec -it stns-build /bin/bash

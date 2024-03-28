@@ -16,6 +16,9 @@ sudo sh <<'SCRIPT'
   if [ -f /etc/centos-release ]; then
     os_name="centos"
     releasever=$(rpm -q --qf "%{version}" -f /etc/centos-release| cut -d. -f1)
+  elif [ -f /etc/os-release ]; then
+    os_name="centos"
+    releasever=$(rpm -q --qf "%{version}" -f /etc/os-release| cut -d. -f1)
   elif [ -f /etc/almalinux-release ]; then
     os_name="almalinux"
     releasever=$(rpm -q --qf "%{version}" -f /etc/almalinux-release| cut -d. -f1)
