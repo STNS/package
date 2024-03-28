@@ -13,6 +13,7 @@ echo '%_gpg_name stns-server' >> ~/.rpmmacros && \
 echo '%_gpg_digest_algo sha256' >> ~/.rpmmacros &&\
 echo '%_gpg_hash_algo 8' >> ~/.rpmmacros
 
+# for libnss-stns
 RUN cp -pr builds/*{amd64,x86_64}*.rpm releases/centos/x86_64/
 RUN cp -pr builds/*x86_64*el9.rpm  releases/almalinux/x86_64/9/
 RUN cp -pr builds/*x86_64*el7.rpm releases/centos/x86_64/7/
@@ -22,6 +23,12 @@ RUN cp -pr builds/*{arm64,aarch64}*.rpm releases/centos/aarch64/
 RUN cp -pr builds/*aarch64*el9.rpm releases/almalinux/aarch64/9/
 RUN cp -pr builds/*aarch64*el7.rpm releases/centos/aarch64/7/
 RUN cp -pr builds/*aarch64*el7.rpm releases/centos/aarch64/2/
+
+# for go packages(cache-stnsd,stns)
+RUN cp -pr builds/*{amd64,arm64}*.rpm releases/centos/x86_64/
+RUN cp -pr builds/*{amd64,arm64}*.rpm releases/almalinux/x86_64/9
+RUN cp -pr builds/*{amd64,arm64}*.rpm releases/centos/x86_64/7
+RUN cp -pr builds/*{amd64,arm64}*.rpm releases/centos/x86_64/2
 
 ENV GPG_PASSWORD dummy
 CMD bin/import_gpgkey &>/dev/null && \
