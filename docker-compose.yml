@@ -26,6 +26,16 @@ services:
       - ./repo:/opt/pkg/repo
     environment:
       - DIST=jammy
+  debrepo-noble:
+    build:
+      context: .
+      dockerfile: dockerfiles/Dockerfile.debrepo
+      args:
+        DIST: noble
+    volumes:
+      - ./repo:/opt/pkg/repo
+    environment:
+      - DIST=noble
   debrepo-buster:
     build:
       context: .
