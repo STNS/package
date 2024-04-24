@@ -5,7 +5,7 @@ PRODUCTION_SSH=rough-field-2764@ssh.mc.lolipop.jp
 STAGING_SSH=lingering-dew-9357@ssh.mc.lolipop.jp
 
 SSH = $(if $(filter staging,$(ENVIRONMENT)),$(STAGING_SSH),$(PRODUCTION_SSH))
-PRODUCT_CODES=centos almalinux buster bullseye focal jammy debian
+PRODUCT_CODES=centos almalinux buster bullseye focal jammy noble debian
 
 pkg:
 	bin/download_artifacts STNS STNS
