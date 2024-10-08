@@ -14,16 +14,16 @@ pkg:
 
 yumrepo: ## Create some distribution packages
 	sudo rm -rf repo/centos
-	docker-compose build yumrepo
-	docker-compose run -e GPG_PASSWORD=$(GPG_PASSWORD) yumrepo
+	docker compose build yumrepo
+	docker compose run -e GPG_PASSWORD=$(GPG_PASSWORD) yumrepo
 
 debrepo: ## Create some distribution packages
 	for i in $(PRODUCT_CODES); do\
 	  	if [ "$$i" = "centos" ];then continue; fi; \
 	  	if [ "$$i" = "almalinux" ];then continue; fi; \
 		sudo rm -rf repo/$$i; \
-		docker-compose build debrepo-$$i; \
-		docker-compose run -e GPG_PASSWORD=$(GPG_PASSWORD) debrepo-$$i; \
+		docker compose build debrepo-$$i; \
+		docker compose run -e GPG_PASSWORD=$(GPG_PASSWORD) debrepo-$$i; \
 	done
 
 production_deploy: ENVIRONMENT=production
