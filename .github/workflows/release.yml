@@ -16,7 +16,7 @@ jobs:
         known_hosts: unnecessary
         name: id_ed25519
         config: |
-          Host ssh.mc.lolipop.jp
+          Host sv13076.xserver.jp
             UserKnownHostsFile /dev/null
             StrictHostKeyChecking no
             IdentityFile ~/.ssh/id_ed25519
