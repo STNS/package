@@ -1,4 +1,4 @@
-RELEASE_DIR=/home/xs549470/stns.jp/public_html
+RELEASE_DIR=/home/xs549470/stns.jp/public_html/repo
 
 SSH=xs549470@sv13076.xserver.jp
 PRODUCT_CODES=centos almalinux buster bullseye bookworm focal jammy noble debian
