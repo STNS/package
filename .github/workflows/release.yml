@@ -2,15 +2,6 @@
 name: release
 on:
   workflow_dispatch:
-    inputs:
-      stage:
-        description: 'deploy stage'
-        default: "staging"
-        required: true
-        type: choice
-        options:
-        - staging
-        - production
 jobs:
   release:
     runs-on: ubuntu-latest
@@ -35,6 +26,6 @@ jobs:
         echo -n '${{ secrets.GPG_PUBLIC_KEY }}' > keys/pub.key
         echo -n '${{ secrets.GPG_SECRET_KEY }}' > keys/sec.key
     - name: deploy
-      run: make ${{ github.event.inputs.stage }}_deploy
+      run: make deploy
       env:
         GPG_PASSWORD: ${{ secrets.GPG_PASSWORD }}
