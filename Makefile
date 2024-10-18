@@ -1,10 +1,6 @@
-RELEASE_DIR=/var/www/html
+RELEASE_DIR=/home/xs549470/stns.jp/public_html
 
-ENVIRONMENT ?= staging
-PRODUCTION_SSH=rough-field-2764@ssh.mc.lolipop.jp
-STAGING_SSH=lingering-dew-9357@ssh.mc.lolipop.jp
-
-SSH = $(if $(filter staging,$(ENVIRONMENT)),$(STAGING_SSH),$(PRODUCTION_SSH))
+SSH=xs549470@sv13076.xserver.jp
 PRODUCT_CODES=centos almalinux buster bullseye bookworm focal jammy noble debian
 
 pkg:
@@ -26,20 +22,16 @@ debrepo: ## Create some distribution packages
 		docker compose run -e GPG_PASSWORD=$(GPG_PASSWORD) debrepo-$$i; \
 	done
 
-production_deploy: ENVIRONMENT=production
-production_deploy: deploy
-staging_deploy: ENVIRONMENT=staging
-staging_deploy: deploy
 
 deploy: pkg yumrepo debrepo
 	for i in $(PRODUCT_CODES); do\
-		rsync --delete -avz repo/$$i -e 'ssh' $(SSH):$(RELEASE_DIR); \
+		rsync --delete -avz repo/$$i -e 'ssh -p10022' $(SSH):$(RELEASE_DIR); \
 	done
-	ssh $(SSH) mkdir -p $(RELEASE_DIR)/scripts
-	ssh $(SSH) mkdir -p $(RELEASE_DIR)/gpg
-	scp assets/GPG-KEY-stns $(SSH):$(RELEASE_DIR)/gpg/
-	scp assets/scripts/yum-repo.sh $(SSH):$(RELEASE_DIR)/scripts/
-	scp assets/scripts/apt-repo.sh $(SSH):$(RELEASE_DIR)/scripts/
+	ssh -p10022 $(SSH) mkdir -p $(RELEASE_DIR)/scripts
+	ssh -p10022 $(SSH) mkdir -p $(RELEASE_DIR)/gpg
+	scp -P10022 assets/GPG-KEY-stns $(SSH):$(RELEASE_DIR)/gpg/
+	scp -P10022 assets/scripts/yum-repo.sh $(SSH):$(RELEASE_DIR)/scripts/
+	scp -P10022 assets/scripts/apt-repo.sh $(SSH):$(RELEASE_DIR)/scripts/
 
 run_docker:
 	docker build -t stns-build .
