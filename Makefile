@@ -1,7 +1,7 @@
 RELEASE_DIR=/home/xs549470/stns.jp/public_html/repo
 
 SSH=xs549470@sv13076.xserver.jp
-PRODUCT_CODES=centos almalinux buster bullseye bookworm focal jammy noble debian
+PRODUCT_CODES=centos almalinux bullseye bookworm focal jammy noble debian
 
 pkg:
 	bin/download_artifacts STNS STNS
