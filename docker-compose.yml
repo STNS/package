@@ -46,16 +46,6 @@ services:
       - ./repo:/opt/pkg/repo
     environment:
       - DIST=resolute
-  debrepo-buster:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.debrepo
-      args:
-        DIST: buster
-    volumes:
-      - ./repo:/opt/pkg/repo
-    environment:
-      - DIST=buster
   debrepo-bullseye:
     build:
       context: .
