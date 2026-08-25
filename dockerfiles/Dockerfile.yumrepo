@@ -3,9 +3,9 @@ RUN dnf install -y createrepo rpm-sign git sudo pinentry
 COPY . /opt/pkg
 WORKDIR /opt/pkg
 RUN rm -rf releases && mkdir releases
-RUN mkdir -p releases/centos/x86_64/{2}
+RUN mkdir -p releases/centos/x86_64/2
 RUN mkdir -p releases/almalinux/x86_64/9
-RUN mkdir -p releases/centos/aarch64/{2}
+RUN mkdir -p releases/centos/aarch64/2
 RUN mkdir -p releases/almalinux/aarch64/9
 
 RUN echo '%_signature gpg' >> ~/.rpmmacros && \
@@ -16,11 +16,9 @@ echo '%_gpg_hash_algo 8' >> ~/.rpmmacros
 # for libnss-stns
 RUN cp -pr builds/*{amd64,x86_64}*.rpm releases/centos/x86_64/
 RUN cp -pr builds/*x86_64*el9.rpm  releases/almalinux/x86_64/9/
-RUN cp -pr releases/centos/x86_64/2/
 
 RUN cp -pr builds/*{arm64,aarch64}*.rpm releases/centos/aarch64/
 RUN cp -pr builds/*aarch64*el9.rpm releases/almalinux/aarch64/9/
-RUN cp -pr releases/centos/aarch64/2/
 
 # for go packages(cache-stnsd,stns)
 RUN cp -pr builds/*amd64*.rpm releases/centos/x86_64/
