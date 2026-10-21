@@ -46,16 +46,6 @@ services:
       - ./repo:/opt/pkg/repo
     environment:
       - DIST=resolute
-  debrepo-bullseye:
-    build:
-      context: .
-      dockerfile: dockerfiles/Dockerfile.debrepo
-      args:
-        DIST: bullseye
-    volumes:
-      - ./repo:/opt/pkg/repo
-    environment:
-      - DIST=bullseye
   debrepo-bookworm:
     build:
       context: .
